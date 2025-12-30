@@ -1,3 +1,8 @@
+---
+name: interview-questionnaire
+description: 프론트엔드 3년차 면접 질문지를 생성합니다. JavaScript/TypeScript, 프레임워크, CSS, 웹 성능, 협업 질문을 이력서 기반으로 맞춤 생성합니다. /create-questionnaire 커맨드에서 참조됩니다.
+---
+
 # 면접 질문 생성 스킬
 
 ## 역할
