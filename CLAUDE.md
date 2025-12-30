@@ -26,14 +26,17 @@ AI agent system for frontend developers (3 years experience) preparing for job i
 Resume → /review-resume → /create-questionnaire → Write Answers → /evaluate → Final Report
 ```
 
-### 3-Agent Evaluation System
-- **Technical Evaluator** (evaluator-technical.md): Strict and critical, 45% weight on technical skills
-- **Communication Evaluator** (evaluator-communication.md): Flexible and positive, 30% weight on soft skills
-- **Final Arbiter** (evaluator-final.md): Neutral, reconciles opinions and makes final judgment
+### 3-Agent Evaluation System (Subagent Architecture)
+- **Technical Evaluator** (agents/technical-evaluator.md): Strict and critical, 45% weight on technical skills
+- **Communication Evaluator** (agents/communication-evaluator.md): Flexible and positive, 30% weight on soft skills
+- **Final Arbiter** (agents/final-arbiter.md): Neutral, reconciles opinions and makes final judgment
+
+> Note: Technical and Communication evaluators run in parallel as independent subagents to prevent Anchoring Bias.
 
 ### File Structure
 - `.claude/commands/`: User-executable command definitions
-- `.claude/skills/`: Evaluation criteria and agent persona definitions
+- `.claude/agents/`: Independent subagents for 3-agent evaluation (parallel execution)
+- `.claude/skills/`: Evaluation criteria for resume review and questionnaire generation
 - `resumes/`: Resume storage and output files (review, questionnaire, evaluation)
 
 ## Output File Naming Convention

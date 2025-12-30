@@ -95,12 +95,14 @@ interview-agents/
 │   │   ├── create-questionnaire.md   # 면접 질문지 생성 커맨드
 │   │   └── evaluate.md               # 3-에이전트 평가 커맨드
 │   │
-│   └── skills/                       # 에이전트 스킬 및 가이드
+│   ├── agents/                       # 서브 에이전트 (독립 실행)
+│   │   ├── technical-evaluator.md    # 🔬 기술 평가자
+│   │   ├── communication-evaluator.md # 💬 소프트스킬 평가자
+│   │   └── final-arbiter.md          # ⚖️ 최종 조율자
+│   │
+│   └── skills/                       # 평가 기준 가이드
 │       ├── resume-review.md          # 이력서 리뷰 평가 기준
-│       ├── interview-questionnaire.md # 면접 질문 데이터베이스
-│       ├── evaluator-technical.md    # 🔬 기술 평가자 페르소나
-│       ├── evaluator-communication.md # 💬 소프트스킬 평가자 페르소나
-│       └── evaluator-final.md        # ⚖️ 최종 조율자 페르소나
+│       └── interview-questionnaire.md # 면접 질문 데이터베이스
 │
 ├── resumes/                          # 이력서 및 결과물 저장소
 │   ├── sample_resume.md              # 이력서 작성 템플릿
@@ -253,15 +255,18 @@ Claude CLI에서 다음 커맨드를 실행합니다:
 
 #### 결과물: `resumes/[본인이름]_evaluation.md`
 
-3명의 가상 면접관이 순차적으로 평가합니다:
+3명의 가상 면접관이 **독립적으로 병렬 평가**합니다:
+
+> 💡 Anchoring Bias 방지를 위해 서브 에이전트로 분리되어, 기술 평가자와 커뮤니케이션 평가자가 서로의 평가를 보지 않고 독립적으로 평가합니다.
 
 ```
 ┌──────────────────────────────────────────────────────────┐
 │                                                          │
 │  🔬 기술 평가자        💬 커뮤니케이션 평가자              │
 │  (엄격/비판적)         (유연/긍정적)                      │
+│  [독립 서브에이전트]    [독립 서브에이전트]                │
 │       │                     │                            │
-│       └─────────┬───────────┘                            │
+│       └─────────┬───────────┘  ← 병렬 실행               │
 │                 ▼                                        │
 │           ⚖️ 최종 조율자                                 │
 │           (중립/균형적)                                   │
@@ -362,15 +367,20 @@ Claude CLI에서 다음 커맨드를 실행합니다:
 | `create-questionnaire.md` | 맞춤형 질문지 생성 | `/create-questionnaire [이력서경로]` |
 | `evaluate.md` | 3-에이전트 종합 평가 | `/evaluate [질문지경로]` |
 
+### 에이전트 파일 (.claude/agents/)
+
+| 파일 | 용도 | 특징 |
+|------|------|------|
+| `technical-evaluator.md` | 기술 역량 평가 | 엄격/비판적 관점, 병렬 실행 |
+| `communication-evaluator.md` | 소프트스킬 평가 | 유연/긍정적 관점, 병렬 실행 |
+| `final-arbiter.md` | 최종 조율 및 판정 | 두 평가 결과 종합, 가중치 적용 |
+
 ### 스킬 파일 (.claude/skills/)
 
 | 파일 | 용도 | 내용 |
 |------|------|------|
 | `resume-review.md` | 이력서 평가 기준 | 5개 영역, 100점 배점 기준 |
 | `interview-questionnaire.md` | 질문 데이터베이스 | 6개 카테고리별 면접 질문 |
-| `evaluator-technical.md` | 기술 평가자 페르소나 | 기술 역량 평가 기준 |
-| `evaluator-communication.md` | 소프트스킬 평가자 페르소나 | 협업/성장 평가 기준 |
-| `evaluator-final.md` | 최종 조율자 페르소나 | 종합 판단 및 조율 기준 |
 
 ---
 
