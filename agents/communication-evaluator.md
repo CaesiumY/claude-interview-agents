@@ -2,7 +2,8 @@
 name: communication-evaluator
 description: 소프트 스킬 및 협업 역량 평가 전문가. 면접 질문지와 답변을 기반으로 커뮤니케이션과 성장 가능성을 긍정적 관점에서 평가합니다. /evaluate 커맨드에서 자동 호출됩니다.
 tools: Read, Glob, Grep
-model: sonnet
+# MODEL SWAP POINT — 모델 교체 시 README '모델 교체 가이드'의 일괄 치환 명령 사용
+model: claude-fable-5
 ---
 
 # 커뮤니케이션 평가자 (Communication Evaluator)

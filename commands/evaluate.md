@@ -19,10 +19,13 @@ argument-hint: <질문지파일경로>
 
 ## 실행 절차
 
+> **경로 규칙**: 입력 파일과 산출물 경로는 모두 **커맨드를 실행한 현재 작업 디렉토리 기준**입니다.
+
 ### 1단계: 평가 자료 수집
 1. 이력서 파일 읽기 (`resumes/[이름].md`)
 2. 질문지 및 답변 기록 읽기 (`resumes/[이름]_questionnaire.md`)
 3. 지원자 이름 추출
+4. 모의면접 평가 파일(`resumes/[이름]_mock_*_evaluation.md`) 존재 여부 확인 (있으면 4단계에서 참고 자료로 전달)
 
 ### 2단계: 독립 평가 실행 (병렬)
 
@@ -31,7 +34,7 @@ argument-hint: <질문지파일경로>
 
 #### Task 1: 기술 평가자 서브 에이전트 호출
 
-`.claude/agents/technical-evaluator.md` 서브 에이전트를 사용합니다.
+`technical-evaluator` 서브 에이전트를 사용합니다.
 
 ```
 Use the technical-evaluator subagent to evaluate the following candidate:
@@ -46,7 +49,7 @@ Use the technical-evaluator subagent to evaluate the following candidate:
 
 #### Task 2: 커뮤니케이션 평가자 서브 에이전트 호출
 
-`.claude/agents/communication-evaluator.md` 서브 에이전트를 사용합니다.
+`communication-evaluator` 서브 에이전트를 사용합니다.
 
 ```
 Use the communication-evaluator subagent to evaluate the following candidate:
@@ -64,7 +67,7 @@ Use the communication-evaluator subagent to evaluate the following candidate:
 
 ### 4단계: 최종 조율자 서브 에이전트 호출 (순차)
 
-`.claude/agents/final-arbiter.md` 서브 에이전트를 사용합니다.
+`final-arbiter` 서브 에이전트를 사용합니다.
 
 ```
 Use the final-arbiter subagent to synthesize the evaluation results:
@@ -80,6 +83,10 @@ Use the final-arbiter subagent to synthesize the evaluation results:
 - 이력서 경로: resumes/[이름].md
 - 질문지 경로: resumes/[이름]_questionnaire.md
 
+## 참고 자료 (존재하는 경우에만)
+- 모의면접 평가 경로: resumes/[이름]_mock_[유형]_[날짜]_evaluation.md
+  (가중치 계산에는 포함하지 말고 종합 판정 서술에만 반영할 것)
+
 ## 요청
 두 평가 결과를 종합하여 최종 평가 보고서를 작성하고,
 `resumes/[이름]_evaluation.md` 파일로 저장하세요.
@@ -90,9 +97,9 @@ Use the final-arbiter subagent to synthesize the evaluation results:
 
 ---
 
-## 서브 에이전트 호출 방법
+## 서브 에이전트 구성
 
-이 커맨드는 `.claude/agents/` 폴더의 서브 에이전트를 활용합니다:
+이 커맨드는 플러그인의 서브 에이전트를 활용합니다:
 
 | 에이전트 | 역할 | 가중치 |
 |----------|------|--------|
@@ -113,124 +120,6 @@ Use the final-arbiter subagent to synthesize the evaluation results:
 
 ## 출력 형식
 
-최종 결과는 아래 형식으로 `resumes/[이름]_evaluation.md`에 저장됩니다:
-
-```markdown
-# ⚖️ 모의 면접 최종 평가 보고서
-
-## 지원자 정보
-- 이름: [이름]
-- 경력: 3년차 프론트엔드 개발자
-- 평가일: YYYY-MM-DD
-
----
-
-## 1. 에이전트별 평가
-
-### 🔬 기술 평가자
-**점수: XX/100**
-
-| 영역 | 점수 | 평가 |
-|------|------|------|
-| JS/TS 역량 | /25 | |
-| 프레임워크 | /25 | |
-| 성능 최적화 | /20 | |
-| 코드 품질 | /15 | |
-| 문제 해결 | /15 | |
-
-**Critical Issues:**
--
-
-**강점:**
--
-
-**약점:**
--
-
-**권고:** [추천/보류/비추천]
-
----
-
-### 💬 커뮤니케이션 평가자
-**점수: XX/100**
-
-| 영역 | 점수 | 평가 |
-|------|------|------|
-| 커뮤니케이션 | /25 | |
-| 협업 역량 | /25 | |
-| 학습/성장 | /20 | |
-| 문화 적합성 | /15 | |
-| 주도성 | /15 | |
-
-**핵심 강점:**
--
-
-**발전 가능성:**
--
-
-**우려 사항:**
--
-
-**권고:** [추천/보류/비추천]
-
----
-
-## 2. 토론 기록
-
-### 의견 일치
--
-
-### 의견 불일치 및 조율
-| 항목 | 기술 평가자 | 커뮤니케이션 평가자 | 조율 결과 |
-|------|-------------|---------------------|-----------|
-| | | | |
-
----
-
-## 3. 최종 결과
-
-### 가중 점수 계산
-| 영역 | 원점수 | 가중치 | 가중점수 |
-|------|--------|--------|----------|
-| 기술 역량 | /100 | 45% | |
-| 소프트 스킬 | /100 | 30% | |
-| 성장 가능성 | /100 | 25% | |
-| **최종 점수** | | | **/100** |
-
-### 판정
-# [✅ 합격 예상 / ⏳ 보완 필요 / ❌ 추가 준비 필요]
-
-### 결정 근거
->
-
----
-
-## 4. 개선 액션 플랜
-
-### 즉시 개선 필요 (1주 내)
-1.
-2.
-
-### 단기 개선 (1개월 내)
-1.
-2.
-
-### 중기 개선 (3개월 내)
-1.
-2.
-
----
-
-## 5. 예상 면접 결과
-
-| 회사 유형 | 합격 가능성 | 보완 포인트 |
-|-----------|-------------|-------------|
-| 스타트업 | % | |
-| 중견기업 | % | |
-| 대기업 | % | |
-
----
-
-## 6. 추가 권장 사항
--
-```
+최종 보고서 형식은 `final-arbiter` 에이전트에 정의되어 있으며,
+`resumes/[이름]_evaluation.md`에 저장됩니다:
+지원자 정보 → 에이전트별 평가 → 토론 기록 → 최종 결과(가중 점수) → 개선 액션 플랜 → 예상 면접 결과

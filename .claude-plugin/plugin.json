@@ -1,0 +1,21 @@
+{
+  "name": "interview-agents",
+  "displayName": "Interview Agents",
+  "version": "2.0.0",
+  "description": "프론트엔드 개발자 이직 준비 AI 에이전트 — 이력서 리뷰, 맞춤 면접 질문지, 3-에이전트 평가, 임원/컬처핏 모의면접, 4-Phase 포트폴리오 하니스",
+  "author": {
+    "name": "caesiumy",
+    "url": "https://caesiumy.dev"
+  },
+  "homepage": "https://caesiumy.dev/posts/ai/portfolio-strategy-harness-design/",
+  "repository": "https://github.com/caesiumy/claude-interview-agents",
+  "license": "MIT",
+  "keywords": [
+    "interview",
+    "resume",
+    "portfolio",
+    "frontend",
+    "korean",
+    "career"
+  ]
+}
