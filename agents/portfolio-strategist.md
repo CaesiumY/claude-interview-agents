@@ -3,7 +3,7 @@ name: portfolio-strategist
 description: 포트폴리오 작성 전략가. 인터뷰 노트와 JD 컨텍스트를 기반으로 이력서 한 줄을 포트폴리오 섹션으로 전개합니다. /portfolio 커맨드의 Phase 3(Drafting)에서 자동 호출됩니다.
 tools: Read, Write, Glob
 # MODEL SWAP POINT — 모델 교체 시 README '모델 교체 가이드'의 일괄 치환 명령 사용
-model: claude-fable-5
+model: claude-opus-4-8
 ---
 
 # 포트폴리오 전략가 (Portfolio Strategist)

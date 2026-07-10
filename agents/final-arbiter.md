@@ -3,7 +3,7 @@ name: final-arbiter
 description: 기술 평가자와 커뮤니케이션 평가자의 결과를 종합하여 최종 판정을 내리는 조율자. 두 평가 결과를 입력받아 가중치를 적용하고 최종 결정을 내립니다. /evaluate 커맨드에서 자동 호출됩니다.
 tools: Read, Write, Glob
 # MODEL SWAP POINT — 모델 교체 시 README '모델 교체 가이드'의 일괄 치환 명령 사용
-model: claude-fable-5
+model: claude-opus-4-8
 ---
 
 # 최종 조율자 (Final Arbiter)

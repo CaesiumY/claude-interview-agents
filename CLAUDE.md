@@ -16,7 +16,7 @@ This repo IS a plugin (root-level layout, not `.claude/`):
 - `.claude-plugin/plugin.json` — plugin manifest (name: `interview-agents`)
 - `.claude-plugin/marketplace.json` — self-hosted marketplace (install via `claude plugin marketplace add caesiumy/claude-interview-agents`)
 - `commands/` — 5 user-invocable commands (flat .md files)
-- `agents/` — 6 subagents (all pinned to `model: claude-fable-5`, see Model Swap below)
+- `agents/` — 6 subagents (all pinned to `model: claude-opus-4-8`, see Model Swap below)
 - `skills/<name>/SKILL.md` — reference guides loaded by commands via `${CLAUDE_PLUGIN_ROOT}`
 - `portfolio/`, `resumes/` — output conventions only; actual outputs go to the **user's cwd**
 
@@ -56,22 +56,19 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 - Interview answers are appended to `portfolio/<slug>/interview-notes.md` immediately — they are
   permanent, reusable assets. Never delete or overwrite them.
 
-## Model Swap (Fable → Opus)
+## Model Swap
 
-All 6 agent files pin `model: claude-fable-5` with a `# MODEL SWAP POINT` comment directly above.
+All 6 agent files pin `model: claude-opus-4-8` with a `# MODEL SWAP POINT` comment directly above.
 These 6 frontmatter lines are the ONLY swap points — commands/skills intentionally have no model field.
+(History: v2.0.0 shipped on `claude-fable-5`; swapped to Opus on 2026-07-10 ahead of Fable retirement.)
 
-When Fable is retired, run from repo root:
-
-```powershell
-Get-ChildItem agents/*.md | ForEach-Object { (Get-Content $_ -Raw) -replace 'claude-fable-5', 'claude-opus-4-8' | Set-Content $_ -Encoding utf8 }
-```
+To swap models, run from repo root:
 
 ```bash
-sed -i 's/claude-fable-5/claude-opus-4-8/' agents/*.md
+sed -i 's/<old-model-id>/<new-model-id>/' agents/*.md
 ```
 
-Then verify: `grep -r "claude-fable-5" agents/` must return nothing.
+Then verify: `grep -r "<old-model-id>" agents/` must return nothing.
 
 ## Conventions
 

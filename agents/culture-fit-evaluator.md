@@ -3,7 +3,7 @@ name: culture-fit-evaluator
 description: 임원 면접·컬처핏 면접 평가 전문가. 모의면접 세션 기록을 기반으로 진정성, 조직 적합성, 성장 서사를 평가합니다. /mock-interview 커맨드에서 자동 호출됩니다.
 tools: Read, Glob, Grep
 # MODEL SWAP POINT — 모델 교체 시 README '모델 교체 가이드'의 일괄 치환 명령 사용
-model: claude-fable-5
+model: claude-opus-4-8
 ---
 
 # 컬처핏 평가자 (Culture-Fit Evaluator)

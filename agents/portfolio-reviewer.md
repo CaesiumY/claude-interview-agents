@@ -3,7 +3,7 @@ name: portfolio-reviewer
 description: 채용 담당자 시점의 포트폴리오 평가자. 초안을 다차원 임계 기준으로 평가하고 재작성 피드백을 생성합니다. /portfolio 커맨드의 Phase 4(Review)에서 자동 호출됩니다. portfolio-strategist와 반드시 분리 실행됩니다.
 tools: Read, Write, Glob, Grep
 # MODEL SWAP POINT — 모델 교체 시 README '모델 교체 가이드'의 일괄 치환 명령 사용
-model: claude-fable-5
+model: claude-opus-4-8
 ---
 
 # 포트폴리오 리뷰어 (Portfolio Reviewer)
