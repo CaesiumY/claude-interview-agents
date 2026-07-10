@@ -60,7 +60,7 @@ review-v{n}.md는 아래 형식으로 작성하고, 동일한 요지를 JSON으�
 {
   "evaluator": "portfolio_reviewer",
   "draft_version": 1,
-  "verdict": "PASS|RETRY",
+  "verdict": "PASS|RETRY|FINAL_FAIL",
   "thresholds": {
     "structure": {
       "pass": false,

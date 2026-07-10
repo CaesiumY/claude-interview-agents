@@ -29,7 +29,7 @@ argument-hint: <이력서파일경로> [--type executive|culture]
    유형에 맞는 질문 6~8개를 선별:
    - 질문은행에서 4~5개 (커리어/조직/협업/자기인식 카테고리 균형)
    - 이력서·포트폴리오 기반 맞춤 질문 2~3개 (트레이드오프·실패 서사·수치에서 생성)
-5. 세션 파일 생성: `resumes/[이름]_mock_[유형]_[YYYY-MM-DD].md` (UTF-8)
+5. 세션 파일 생성: `resumes/[이름]_mock_[type]_[YYYY-MM-DD].md` (UTF-8)
 
 ### 2단계: 면접 진행 (인터랙티브)
 
@@ -71,7 +71,7 @@ Use the culture-fit-evaluator subagent to evaluate this mock interview session:
 
 ### 4단계: 결과 저장 및 안내
 1. 평가 JSON을 읽기 좋은 마크다운 보고서로 변환하여
-   `resumes/[이름]_mock_[유형]_[YYYY-MM-DD]_evaluation.md`로 저장:
+   `resumes/[이름]_mock_[type]_[YYYY-MM-DD]_evaluation.md`로 저장:
    - 영역별 점수표 (진정성/조직적합/성장서사/태도/리스크신호)
    - 감지된 리스크 신호와 근거
    - 답변별 개선 피드백 (answer_feedback)

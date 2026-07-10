@@ -27,7 +27,7 @@ description: 이력서 한 줄을 포트폴리오 섹션으로 전개하는 4-Ph
 
 | Phase | 주도 | 참조 파일 | 산출물 |
 |-------|------|----------|--------|
-| 1. Curation | AI | `jd-parsing.md` | `portfolio/_curation/curation-[날짜].md` |
+| 1. Curation | AI | `jd-parsing.md` | `portfolio/_curation/curation-[YYYY-MM-DD].md` |
 | 2. Interview | 인간 | `interview-protocol.md` | `portfolio/<slug>/interview-notes.md` |
 | 3. Drafting | AI (strategist) | `templates.md` | `portfolio/<slug>/draft-v{n}.md` |
 | 4. Review | AI (reviewer) + 인간 | `review-rubric.md` | `portfolio/<slug>/review-v{n}.md`, `final.md` |

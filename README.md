@@ -61,7 +61,7 @@ claude --plugin-dir C:\path\to\claude-interview-agents
 | `/review-resume <이력서>` | 이력서 100점 만점 리뷰 + PSR 분해 검증 | `resumes/[이름]_review.md` |
 | `/create-questionnaire <이력서>` | 맞춤 면접 질문지 생성 (질문 4카테고리) | `resumes/[이름]_questionnaire.md` |
 | `/evaluate <질문지>` | 3-에이전트 병렬 평가 + 최종 판정 | `resumes/[이름]_evaluation.md` |
-| `/mock-interview <이력서> [--type executive\|culture]` | 인터랙티브 임원/컬처핏 모의면접 + 평가 | `resumes/[이름]_mock_[유형]_[날짜]_evaluation.md` |
+| `/mock-interview <이력서> [--type executive\|culture]` | 인터랙티브 임원/컬처핏 모의면접 + 평가 | `resumes/[이름]_mock_[type]_[YYYY-MM-DD]_evaluation.md` |
 | `/portfolio <이력서> [JD]` | 4-Phase 포트폴리오 하니스 | `portfolio/<항목>/final.md` |
 
 ---

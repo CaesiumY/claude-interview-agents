@@ -84,7 +84,7 @@ Use the final-arbiter subagent to synthesize the evaluation results:
 - 질문지 경로: resumes/[이름]_questionnaire.md
 
 ## 참고 자료 (존재하는 경우에만)
-- 모의면접 평가 경로: resumes/[이름]_mock_[유형]_[날짜]_evaluation.md
+- 모의면접 평가 경로: resumes/[이름]_mock_[type]_[YYYY-MM-DD]_evaluation.md
   (가중치 계산에는 포함하지 말고 종합 판정 서술에만 반영할 것)
 
 ## 요청

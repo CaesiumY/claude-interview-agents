@@ -28,7 +28,7 @@ argument-hint: <이력서파일경로> [JD파일경로]
 
 > **경로 규칙**: 산출물은 모두 **커맨드를 실행한 현재 작업 디렉토리의 `portfolio/`** 아래에 생성합니다 (UTF-8).
 > 디렉토리 구조 컨벤션은 산출물과 함께 자동 생성되는 파일 경로를 따릅니다:
-> `portfolio/_curation/curation-[날짜].md`, `portfolio/<항목-slug>/{jd-context.md, interview-notes.md, draft-v{n}.md, review-v{n}.md, final.md}`
+> `portfolio/_curation/curation-[YYYY-MM-DD].md`, `portfolio/<항목-slug>/{jd-context.md, interview-notes.md, draft-v{n}.md, review-v{n}.md, final.md}`
 
 ---
 
