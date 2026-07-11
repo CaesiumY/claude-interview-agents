@@ -15,8 +15,8 @@ This repo IS a plugin (root-level layout, not `.claude/`):
 
 - `.claude-plugin/plugin.json` — plugin manifest (name: `interview-agents`)
 - `.claude-plugin/marketplace.json` — self-hosted marketplace (install via `claude plugin marketplace add caesiumy/claude-interview-agents`)
-- `commands/` — 5 user-invocable commands (flat .md files)
-- `agents/` — 6 subagents (all pinned to `model: claude-opus-4-8`, see Model Swap below)
+- `commands/` — 8 user-invocable commands (flat .md files)
+- `agents/` — 7 subagents (all pinned to `model: claude-opus-4-8`, see Model Swap below)
 - `skills/<name>/SKILL.md` — reference guides loaded by commands via `${CLAUDE_PLUGIN_ROOT}`
 - `portfolio/`, `resumes/` — output conventions only; actual outputs go to the **user's cwd**
 
@@ -32,6 +32,9 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 | `/evaluate <질문지>` | 3-agent parallel evaluation | `resumes/[name]_evaluation.md` |
 | `/mock-interview <이력서> [--type executive\|culture]` | Interactive mock interview + evaluation | `resumes/[name]_mock_[type]_[YYYY-MM-DD](_evaluation).md` |
 | `/portfolio <이력서> [JD]` | 4-Phase portfolio harness | `portfolio/<slug>/...` |
+| `/assignment-review <레포> [요구사항] [JD]` | Take-home review via `assignment-reviewer` — Binary gates (requirements, executability) + 4 scored dims + ≥5 expected reviewer questions; reuses 5-slot JD parsing | `assignments/<slug>/review-[YYYY-MM-DD].md` |
+| `/interview-retro <이력서> [--company 회사]` | Post-interview retro — recalls received questions, classifies coverage gaps (A/B/C), append-only feedback into `interview-notes.md`. No subagent | `resumes/[name]_retro_[회사]_[YYYY-MM-DD].md` |
+| `/offer <이력서>` | Offer compare + negotiation-card conversion + HR-persona rehearsal (lightweight, no formal scoring). No subagent. Never estimates market salary | `resumes/[name]_offer_[YYYY-MM-DD].md` |
 
 ## Agent Architecture
 
@@ -49,6 +52,15 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
   evaluator. Reverse-question quality criteria live in
   `skills/interview-questionnaire/SKILL.md` ('역질문 생성 규칙' / '피해야 할 역질문').
 
+### Assignment track (`/assignment-review`)
+- `assignment-reviewer` (hiring-side senior FE reviewer) scores take-home submissions: two Binary
+  gates (requirements met; executability 정상/실행 불가/미검증) kept **separate** from the score, plus
+  4 scored dims (code quality 30 / README·runnability 20 / commit history 15 / 3yr-expectation 35 = 100)
+  and ≥5 expected reviewer questions (each with an evidence file path).
+- Cannot run code (tools: Read/Glob/Grep) — the command runs install/build/test and injects the
+  executability verdict; the agent never assumes it "ran" anything.
+- `/interview-retro` and `/offer` use NO subagent — the command's main loop drives them directly.
+
 ### Portfolio harness (`/portfolio`) — writer ≠ reviewer separation
 - `portfolio-strategist` (Phase 3) reads ONLY `skills/portfolio-strategy/templates.md`
 - `portfolio-reviewer` (Phase 4) reads ONLY `skills/portfolio-strategy/review-rubric.md`
@@ -64,8 +76,8 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 
 ## Model Swap
 
-All 6 agent files pin `model: claude-opus-4-8` with a `# MODEL SWAP POINT` comment directly above.
-These 6 frontmatter lines are the ONLY swap points — commands/skills intentionally have no model field.
+All 7 agent files pin `model: claude-opus-4-8` with a `# MODEL SWAP POINT` comment directly above.
+These 7 frontmatter lines are the ONLY swap points — commands/skills intentionally have no model field.
 (History: v2.0.0 shipped on `claude-fable-5`; swapped to Opus on 2026-07-10 ahead of Fable retirement.)
 
 To swap models, run from repo root:
