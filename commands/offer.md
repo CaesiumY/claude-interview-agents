@@ -30,6 +30,9 @@ argument-hint: <이력서파일경로>
 /offer resumes/[이름].md
 ```
 
+> **설계 사유**: 이 커맨드는 인터랙티브 세션(협상 리허설)이 중심이라 서브에이전트 없이
+> 메인 루프가 직접 진행합니다 (서브에이전트는 사용자와 대화할 수 없음).
+
 ## 스킬 참조
 
 시작 전에 `${CLAUDE_PLUGIN_ROOT}/skills/offer-review/SKILL.md`를 읽어
