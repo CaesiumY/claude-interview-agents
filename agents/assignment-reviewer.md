@@ -32,7 +32,7 @@ model: claude-opus-4-8
 ## 평가 대상
 - 과제 레포 경로: <경로> (소스 파일은 에이전트가 Read/Glob/Grep으로 직접 탐색)
 - 요구사항 문서: [전문 — 미확인 모드면 "요구사항 미확인 모드"]
-- 평가 기준: ${CLAUDE_PLUGIN_ROOT}/skills/assignment-review/SKILL.md
+- 평가 기준: [SKILL.md 경로]
 
 ## 수집 자료 (오케스트레이터 수집)
 - 레포 구조: [파일 트리]
@@ -48,7 +48,7 @@ model: claude-opus-4-8
 
 ## 평가 절차
 
-1. 평가 기준 파일(`skills/assignment-review/SKILL.md`)을 읽습니다.
+1. 평가 기준 파일(입력의 [SKILL.md 경로])을 읽습니다.
 2. 필요한 코드를 Read/Glob/Grep으로 직접 열람합니다 (핵심 컴포넌트·상태관리·API 계층·에러 처리·테스트 파일).
 3. **Binary 게이트 먼저 판정**:
    - ① 요구사항 충족: 요구사항 문서의 각 요구사항을 충족/부분 충족/미충족으로 판정하고 구현 위치를 근거로 지목.
