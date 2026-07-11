@@ -27,10 +27,10 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 
 | Command | Purpose | Output (cwd-relative) |
 |---------|---------|----------------------|
-| `/review-resume <이력서>` | Score resume /100 with PSR decomposition | `resumes/[name]_review.md` |
-| `/create-questionnaire <이력서>` | Generate questionnaire (4-category questions) | `resumes/[name]_questionnaire.md` |
+| `/review-resume <이력서> [JD]` | Score resume /100 with PSR decomposition; optional JD → gap analysis reusing the 5-slot parsing from `skills/portfolio-strategy/jd-parsing.md` | `resumes/[name]_review.md` |
+| `/create-questionnaire <이력서>` | Generate questionnaire — 20-25 questions total (4-category, screening/final labels, incl. 3 reverse questions) | `resumes/[name]_questionnaire.md` |
 | `/evaluate <질문지>` | 3-agent parallel evaluation | `resumes/[name]_evaluation.md` |
-| `/mock-interview <이력서> [--type executive\|culture]` | Interactive mock interview + evaluation | `resumes/[name]_mock_[type]_[date](_evaluation).md` |
+| `/mock-interview <이력서> [--type executive\|culture]` | Interactive mock interview + evaluation | `resumes/[name]_mock_[type]_[YYYY-MM-DD](_evaluation).md` |
 | `/portfolio <이력서> [JD]` | 4-Phase portfolio harness | `portfolio/<slug>/...` |
 
 ## Agent Architecture
@@ -43,7 +43,11 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 
 ### Culture track (`/mock-interview`)
 - `culture-fit-evaluator` scores sessions: authenticity 25 / org-fit 25 / growth narrative 20 /
-  attitude 15 / risk signals 15.
+  attitude 15 / risk signals 15. JSON also has `confidence` ("high"|"low") for small samples.
+- When the question pool is exhausted, the session closes with a reverse-question turn
+  ("궁금한 점 있으신가요?") + closing statement — both are part of the record passed to the
+  evaluator. Reverse-question quality criteria live in
+  `skills/interview-questionnaire/SKILL.md` ('역질문 생성 규칙' / '피해야 할 역질문').
 
 ### Portfolio harness (`/portfolio`) — writer ≠ reviewer separation
 - `portfolio-strategist` (Phase 3) reads ONLY `skills/portfolio-strategy/templates.md`
@@ -55,6 +59,8 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
   Phase 3→4 runs WITHOUT a gate.
 - Interview answers are appended to `portfolio/<slug>/interview-notes.md` immediately — they are
   permanent, reusable assets. Never delete or overwrite them.
+- On re-run for an existing slug, previous outputs (jd-context/draft/review/final) move to
+  `portfolio/<slug>/_archive/[YYYY-MM-DD]/`; only `interview-notes.md` stays in place (append-only).
 
 ## Model Swap
 
