@@ -93,7 +93,7 @@ SKILL.md의 recommendation 산정 규칙과 동일합니다. Binary는 점수와
 
 ## 출력 형식
 
-**반드시 아래 JSON 형식으로만 출력하세요.**
+**아래 JSON 객체 하나만 응답 전체로 출력하세요.** 인사말·설명·해설 등 JSON 외의 산문을 앞뒤에 덧붙이지 마세요(코드펜스로 감싸는 경우에도 그 안에 JSON 외 텍스트를 넣지 않습니다). 다음 키는 모두 포함해야 합니다: `evaluator`, `mode`, `executability`, `requirements_check`, `breakdown`(4개 차원 전부), `total_score`, `expected_reviewer_questions`, `improvement_priority`, `recommendation`, `summary`. `recommendation`은 `제출 권장|제출 가능|보완 후 제출|재작업 필요` 중 하나입니다.
 
 ```json
 {

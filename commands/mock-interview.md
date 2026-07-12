@@ -117,6 +117,16 @@ Use the culture-fit-evaluator subagent to evaluate this mock interview session:
 
 **주의**: 이전 세션의 평가 파일은 평가자에게 **전달하지 않습니다** (에이전트의 독립 평가 원칙 유지).
 
+**평가 결과 JSON 유효성 검사** (`/evaluate` 3단계 검증 패턴 준용):
+1. 출력에서 JSON 블록을 추출하고 필수 키(`evaluator`, `session_type`, `total_score`, `breakdown`,
+   `detected_risks`, `consistency_check`, `strengths`, `improvement_points`, `answer_feedback`,
+   `recommendation`, `confidence`, `summary`) 12개가 모두 존재하는지 확인합니다
+2. JSON이 유효하지 않거나(산문 섞임, 파싱 불가) 필수 키가 누락되면 `culture-fit-evaluator`를
+   **1회 재호출**합니다
+3. 재호출도 실패하면 사용자에게 원인(어떤 오류인지·어떤 키가 누락됐는지)을 알리고 **평가를
+   중단**합니다 — 이때 세션 기록 파일(`resumes/[이름]_mock_[type]_[YYYY-MM-DD].md`)은 2단계에서
+   이미 저장되어 있어 대화 내용은 유실되지 않는다는 점을 함께 안내합니다
+
 ### 4단계: 결과 저장 및 안내
 1. 평가 JSON을 읽기 좋은 마크다운 보고서로 변환하여
    `resumes/[이름]_mock_[type]_[YYYY-MM-DD]_evaluation.md`로 저장:
