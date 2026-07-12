@@ -114,6 +114,8 @@ Then verify: `grep -r "<old-model-id>" agents/` must return nothing.
 - All content in Korean (target user is a Korean frontend developer)
 - Output files written UTF-8, paths relative to the user's cwd (plugin installs to cache dir)
 - Agent JSON output schemas follow the pattern in `agents/technical-evaluator.md`
+  (exception: `resume-reviewer` and `questionnaire-designer` return a full markdown
+  report/questionnaire, not JSON)
 - Skill references in commands must use `${CLAUDE_PLUGIN_ROOT}/skills/<name>/...` — never
   relative paths (they break after plugin installation)
 
