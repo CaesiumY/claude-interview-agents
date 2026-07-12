@@ -128,8 +128,11 @@ Use the culture-fit-evaluator subagent to evaluate this mock interview session:
    이미 저장되어 있어 대화 내용은 유실되지 않는다는 점을 함께 안내합니다
 
 ### 4단계: 결과 저장 및 안내
-1. 평가 JSON을 읽기 좋은 마크다운 보고서로 변환하여
-   `resumes/[이름]_mock_[type]_[YYYY-MM-DD]_evaluation.md`로 저장:
+1. 평가 JSON을 읽기 좋은 마크다운 보고서로 변환하여 **1단계에서 실제 생성한 세션 파일 이름**에
+   `_evaluation`을 붙여 저장합니다 — 세션 파일이 순번 접미사(`_2`, `_3`)를 가지면 평가 보고서도
+   같은 순번을 따릅니다 (예: 세션이 `[이름]_mock_[type]_[YYYY-MM-DD]_2.md`이면 평가는
+   `[이름]_mock_[type]_[YYYY-MM-DD]_2_evaluation.md`). 이렇게 해야 같은 날 재응시한 이전 평가
+   보고서를 덮어쓰지 않습니다:
    - 영역별 점수표 (진정성/조직적합/성장서사/태도/리스크신호)
    - 감지된 리스크 신호와 근거
    - 답변별 개선 피드백 (answer_feedback)
