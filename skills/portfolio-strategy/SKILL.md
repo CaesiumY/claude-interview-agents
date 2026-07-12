@@ -62,6 +62,16 @@ description: 이력서 한 줄을 포트폴리오 섹션으로 전개하는 4-Ph
 ## 재사용 시나리오 (다른 회사 JD 적용)
 
 같은 이력서 항목으로 다른 JD에 지원할 때:
-1. Phase 1을 새 JD로 다시 실행 (채점·선별은 JD 의존적)
-2. Phase 2는 기존 `interview-notes.md`를 로드하고 새 JD 관점에서 부족한 질문만 추가
-3. Phase 3·4는 새 `jd-context.md`로 정상 실행
+
+1. **기존 slug 매칭**: `portfolio/*/interview-notes.md`의 1행
+   (`# 인터뷰 노트: [이력서 한 줄 원문]`)을 이력서 한 줄 원문과 대조해
+   동일 항목이면 **기존 slug를 재사용**합니다 — 실행마다 새 slug를 만들면
+   기존 노트 탐지가 실패해 "한 번 답한 것은 다시 답하지 않는다"가 무너집니다
+2. **이전 산출물 보관**: 기존 `jd-context.md` · `draft-v*.md` · `review-v*.md` · `final.md`는
+   `portfolio/<slug>/_archive/[YYYY-MM-DD]/`로 이동한 후 새로 생성합니다 —
+   이전 회사 지원 자산은 삭제하지 않습니다.
+   **`interview-notes.md`만 원위치에서 append를 계속**합니다 (이동·삭제 금지)
+3. **버전 카운터 재시작**: `draft-v{n}` · `review-v{n}`의 `{n}`은 새 실행에서 1부터 다시 시작합니다
+4. Phase 1을 새 JD로 다시 실행 (채점·선별은 JD 의존적)
+5. Phase 2는 기존 `interview-notes.md`를 로드하고 새 JD 관점에서 부족한 질문만 추가
+6. Phase 3·4는 새 `jd-context.md`로 정상 실행

@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "프론트엔드 이직 준비 AI 에이전트 마켓플레이스 — 이력서 리뷰부터 포트폴리오 하니스까지",
-    "version": "2.0.1"
+    "version": "2.2.2"
   },
   "plugins": [
     {
@@ -15,7 +15,7 @@
       "source": "./",
       "displayName": "Interview Agents",
       "description": "프론트엔드 개발자 이직 준비 AI 에이전트 — 이력서 리뷰, 맞춤 면접 질문지, 3-에이전트 평가, 임원/컬처핏 모의면접, 4-Phase 포트폴리오 하니스",
-      "version": "2.0.1",
+      "version": "2.2.2",
       "author": {
         "name": "caesiumy"
       },

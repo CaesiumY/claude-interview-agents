@@ -15,8 +15,8 @@ This repo IS a plugin (root-level layout, not `.claude/`):
 
 - `.claude-plugin/plugin.json` — plugin manifest (name: `interview-agents`)
 - `.claude-plugin/marketplace.json` — self-hosted marketplace (install via `claude plugin marketplace add caesiumy/claude-interview-agents`)
-- `commands/` — 5 user-invocable commands (flat .md files)
-- `agents/` — 6 subagents (all pinned to `model: claude-opus-4-8`, see Model Swap below)
+- `commands/` — 8 user-invocable commands (flat .md files)
+- `agents/` — 9 subagents (all pinned to `model: claude-opus-4-8`, see Model Swap below)
 - `skills/<name>/SKILL.md` — reference guides loaded by commands via `${CLAUDE_PLUGIN_ROOT}`
 - `portfolio/`, `resumes/` — output conventions only; actual outputs go to the **user's cwd**
 
@@ -27,13 +27,24 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 
 | Command | Purpose | Output (cwd-relative) |
 |---------|---------|----------------------|
-| `/review-resume <이력서>` | Score resume /100 with PSR decomposition | `resumes/[name]_review.md` |
-| `/create-questionnaire <이력서>` | Generate questionnaire (4-category questions) | `resumes/[name]_questionnaire.md` |
+| `/review-resume <이력서> [JD]` | Score resume /100 with PSR decomposition via `resume-reviewer`; optional JD → gap analysis reusing the 5-slot parsing from `skills/portfolio-strategy/jd-parsing.md` | `resumes/[name]_review.md` |
+| `/create-questionnaire <이력서>` | Generate questionnaire via `questionnaire-designer` — 20-25 questions total (4-category, screening/final labels, incl. 3 reverse questions) | `resumes/[name]_questionnaire.md` |
 | `/evaluate <질문지>` | 3-agent parallel evaluation | `resumes/[name]_evaluation.md` |
-| `/mock-interview <이력서> [--type executive\|culture]` | Interactive mock interview + evaluation | `resumes/[name]_mock_[type]_[date](_evaluation).md` |
+| `/mock-interview <이력서> [--type executive\|culture]` | Interactive mock interview + evaluation | `resumes/[name]_mock_[type]_[YYYY-MM-DD](_evaluation).md` |
 | `/portfolio <이력서> [JD]` | 4-Phase portfolio harness | `portfolio/<slug>/...` |
+| `/assignment-review <레포> [요구사항] [JD]` | Take-home review via `assignment-reviewer` — Binary gates (requirements, executability) + 4 scored dims + ≥5 expected reviewer questions; reuses 5-slot JD parsing | `assignments/<slug>/review-[YYYY-MM-DD].md` |
+| `/interview-retro <이력서> [--company 회사]` | Post-interview retro — recalls received questions, classifies coverage gaps (A/B/C), append-only feedback into `interview-notes.md`. No subagent | `resumes/[name]_retro_[회사]_[YYYY-MM-DD].md` |
+| `/offer <이력서>` | Offer compare + negotiation-card conversion + HR-persona rehearsal (lightweight, no formal scoring). No subagent. Never estimates market salary | `resumes/[name]_offer_[YYYY-MM-DD].md` |
 
 ## Agent Architecture
+
+### Resume review (`/review-resume`)
+- `resume-reviewer` scores the resume /100 with PSR decomposition and, when a JD is supplied,
+  the JD gap analysis — delegated so scoring stays reproducible across session models.
+
+### Questionnaire generation (`/create-questionnaire`)
+- `questionnaire-designer` generates the 20-25 question set (4-category, screening/final labels,
+  3 reverse questions) — delegated so question construction stays reproducible across session models.
 
 ### Technical track (`/evaluate`)
 - `technical-evaluator` (strict, 45%) ∥ `communication-evaluator` (positive, 30%) — run in
@@ -43,7 +54,20 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 
 ### Culture track (`/mock-interview`)
 - `culture-fit-evaluator` scores sessions: authenticity 25 / org-fit 25 / growth narrative 20 /
-  attitude 15 / risk signals 15.
+  attitude 15 / risk signals 15. JSON also has `confidence` ("high"|"low") for small samples.
+- When the question pool is exhausted, the session closes with a reverse-question turn
+  ("궁금한 점 있으신가요?") + closing statement — both are part of the record passed to the
+  evaluator. Reverse-question quality criteria live in
+  `skills/interview-questionnaire/SKILL.md` ('역질문 생성 규칙' / '피해야 할 역질문').
+
+### Assignment track (`/assignment-review`)
+- `assignment-reviewer` (hiring-side senior FE reviewer) scores take-home submissions: two Binary
+  gates (requirements met; executability 정상/실행 불가/미검증) kept **separate** from the score, plus
+  4 scored dims (code quality 30 / README·runnability 20 / commit history 15 / 3yr-expectation 35 = 100)
+  and ≥5 expected reviewer questions (each with an evidence file path).
+- Cannot run code (tools: Read/Glob/Grep) — the command runs install/build/test and injects the
+  executability verdict; the agent never assumes it "ran" anything.
+- `/interview-retro` and `/offer` use NO subagent — the command's main loop drives them directly.
 
 ### Portfolio harness (`/portfolio`) — writer ≠ reviewer separation
 - `portfolio-strategist` (Phase 3) reads ONLY `skills/portfolio-strategy/templates.md`
@@ -55,11 +79,26 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
   Phase 3→4 runs WITHOUT a gate.
 - Interview answers are appended to `portfolio/<slug>/interview-notes.md` immediately — they are
   permanent, reusable assets. Never delete or overwrite them.
+- On re-run for an existing slug, previous outputs (jd-context/draft/review/final) move to
+  `portfolio/<slug>/_archive/[YYYY-MM-DD]/`; only `interview-notes.md` stays in place (append-only).
+
+## Execution Model Assumption
+
+- Commands (the main loop) run under whatever session model the user has active (Opus, Sonnet,
+  etc.) — this varies per user and per session.
+- Non-interactive work that needs scoring/generation **consistency** is always delegated to a
+  model-pinned subagent, never done by the main loop directly:
+  - Scoring: `resume-reviewer`, `technical-evaluator`, `communication-evaluator`, `final-arbiter`,
+    `culture-fit-evaluator`, `assignment-reviewer`, `portfolio-reviewer`
+  - Generation: `questionnaire-designer`, `portfolio-strategist`
+- `/interview-retro` and `/offer`, plus the interactive phases of every other command (question
+  collection, rehearsal sessions, user gates), intentionally stay in the main loop — a subagent
+  cannot converse with the user.
 
 ## Model Swap
 
-All 6 agent files pin `model: claude-opus-4-8` with a `# MODEL SWAP POINT` comment directly above.
-These 6 frontmatter lines are the ONLY swap points — commands/skills intentionally have no model field.
+All 9 agent files pin `model: claude-opus-4-8` with a `# MODEL SWAP POINT` comment directly above.
+These 9 frontmatter lines are the ONLY swap points — commands/skills intentionally have no model field.
 (History: v2.0.0 shipped on `claude-fable-5`; swapped to Opus on 2026-07-10 ahead of Fable retirement.)
 
 To swap models, run from repo root:
@@ -75,6 +114,8 @@ Then verify: `grep -r "<old-model-id>" agents/` must return nothing.
 - All content in Korean (target user is a Korean frontend developer)
 - Output files written UTF-8, paths relative to the user's cwd (plugin installs to cache dir)
 - Agent JSON output schemas follow the pattern in `agents/technical-evaluator.md`
+  (exception: `resume-reviewer` and `questionnaire-designer` return a full markdown
+  report/questionnaire, not JSON)
 - Skill references in commands must use `${CLAUDE_PLUGIN_ROOT}/skills/<name>/...` — never
   relative paths (they break after plugin installation)
 
