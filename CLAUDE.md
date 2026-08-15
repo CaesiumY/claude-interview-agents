@@ -31,7 +31,7 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 | `/create-questionnaire <이력서>` | Generate questionnaire via `questionnaire-designer` — 20-25 questions total (4-category, screening/final labels, incl. 3 reverse questions) | `resumes/[name]_questionnaire.md` |
 | `/evaluate <질문지>` | 3-agent parallel evaluation | `resumes/[name]_evaluation.md` |
 | `/mock-interview <이력서> [--type executive\|culture]` | Interactive mock interview + evaluation | `resumes/[name]_mock_[type]_[YYYY-MM-DD](_evaluation).md` |
-| `/portfolio <이력서> [JD]` | 4-Phase portfolio harness | `portfolio/<slug>/...` |
+| `/portfolio <이력서> [JD] [--reviewer=hr\|tech\|both]` | 4-Phase portfolio harness; Phase 2 draws from a fixed 22-question bank, Phase 4 evaluates through the chosen reviewer lens (default `hr`) | `portfolio/<slug>/...` |
 | `/assignment-review <레포> [요구사항] [JD]` | Take-home review via `assignment-reviewer` — Binary gates (requirements, executability) + 4 scored dims + ≥5 expected reviewer questions; reuses 5-slot JD parsing | `assignments/<slug>/review-[YYYY-MM-DD].md` |
 | `/interview-retro <이력서> [--company 회사]` | Post-interview retro — recalls received questions, classifies coverage gaps (A/B/C), append-only feedback into `interview-notes.md`. No subagent | `resumes/[name]_retro_[회사]_[YYYY-MM-DD].md` |
 | `/offer <이력서>` | Offer compare + negotiation-card conversion + HR-persona rehearsal (lightweight, no formal scoring). No subagent. Never estimates market salary | `resumes/[name]_offer_[YYYY-MM-DD].md` |
@@ -73,8 +73,15 @@ Local dev: `claude --plugin-dir .` and `claude plugin validate .`
 - `portfolio-strategist` (Phase 3) reads ONLY `skills/portfolio-strategy/templates.md`
 - `portfolio-reviewer` (Phase 4) reads ONLY `skills/portfolio-strategy/review-rubric.md`
 - Never merge these two into one agent or one context — this is the core harness design.
+- Phase 2 splits **protocol** (`interview-protocol.md` — how to run it) from **question bank**
+  (`interview-questions.md` — Q1–Q22, the actual wording). The main loop reads both; questions are
+  never improvised, and questions are never copied into the protocol file (single source).
 - Review thresholds: structure=binary, fit≥70, readability≥75 (word ratio 1:8–1:15), overall≥80.
   Auto-rewrite loop max 3 iterations.
+- `--reviewer=hr|tech|both` (default `hr`) selects the reviewer **lens**, not the weights. The lens
+  changes only how strictly each sub-item is judged — point allocations and the overall formula are
+  fixed, because shifting them would collapse the deliberate ≥80 gate. `both` requires BOTH
+  perspectives to PASS.
 - 3 user gates: GATE 1 (item selection), GATE 2 (interview notes approval), GATE 3·4 (final save).
   Phase 3→4 runs WITHOUT a gate.
 - Interview answers are appended to `portfolio/<slug>/interview-notes.md` immediately — they are

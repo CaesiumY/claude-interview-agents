@@ -1,6 +1,6 @@
 ---
 description: 이력서 한 줄을 포트폴리오 섹션으로 전개하는 4-Phase 하니스를 실행합니다 (Curation→Interview→Drafting→Review)
-argument-hint: <이력서파일경로> [JD파일경로]
+argument-hint: <이력서파일경로> [JD파일경로] [--reviewer=hr|tech|both]
 ---
 
 # 포트폴리오 하니스 명령 (4-Phase)
@@ -73,14 +73,21 @@ AskUserQuestion(multiSelect)으로 채점 상위 항목을 제시하고, **작�
 
 ## Phase 2: Interview — 디테일 채우기 (인간 주도)
 
-가이드: `${CLAUDE_PLUGIN_ROOT}/skills/portfolio-strategy/interview-protocol.md`
+가이드: `${CLAUDE_PLUGIN_ROOT}/skills/portfolio-strategy/interview-protocol.md` (진행 방식)
+문항: `${CLAUDE_PLUGIN_ROOT}/skills/portfolio-strategy/interview-questions.md` (Q1~Q22 질문 은행)
+
+**두 파일을 모두 읽고 시작하세요.** 질문을 즉석에서 지어내지 마세요 — 문항 재현성이 이 단계의 품질을 좌우합니다.
 
 1. **재사용 확인 먼저**: `portfolio/<slug>/interview-notes.md`가 이미 있으면 로드하고,
    새 JD 관점에서 부족한 질문만 추가합니다 — "한 번 답한 것은 다시 답하지 않는다"
-2. 항목당 3~5개 질문을 4카테고리(앵커링/정량/의사결정·트레이드오프/실패)에서 선별합니다
+2. 항목당 3~5개 질문을 4카테고리(앵커링 Q1~5 / 정량 Q6~10 / 의사결정·트레이드오프 Q11~15 / 실패 Q16~20)에서 선별합니다
    - **정량 질문 1개 이상 필수**, Phase 1의 PSR 누락 표시가 질문 선별의 최우선 입력
+   - 항목 성격별 선별은 질문 은행 말미의 '선별 참고표'를 사용합니다
 3. **한 번에 한 질문씩** 제시하고, 답변을 받으면 **즉시** `interview-notes.md`에 append합니다
 4. "모르겠다" 답변도 그대로 기록합니다 — 답변을 창작하지 않습니다
+5. 항목별 인터뷰 종료 시 **Q21(PSR 점검·이력서 갱신 후보)과 Q22(핵심 키워드)**를 진행합니다
+   - Q21 결과는 포트폴리오와 별개로 **다음 이력서 갱신의 재료**가 됩니다
+   - Q22 결과는 Phase 4 적합도의 JD 키워드 반영 평가에 직접 쓰입니다
 
 ### ✋ GATE 2: 인터뷰 노트 승인
 모든 항목 완료 후:
@@ -155,13 +162,18 @@ Use the portfolio-reviewer subagent:
 - 어절 수 참고값: 이력서 한 줄 X어절 / 초안 본문 Y어절 (오케스트레이터 계산, Bash 불가 시 "메인 루프 근사치" 표기)
 - JD 컨텍스트: portfolio/<slug>/jd-context.md
 - 평가 기준: ${CLAUDE_PLUGIN_ROOT}/skills/portfolio-strategy/review-rubric.md
+- 평가자 시점: {hr|tech|both}
 - 현재 루프 회차: {n}/3
 
 ## 요청
 review-rubric.md의 다차원 임계 기준으로 평가하고
 portfolio/<slug>/review-v{n}.md로 저장한 뒤 JSON 판정을 출력하세요.
+'평가자 시점' 섹션의 렌즈를 적용하되 **배점과 종합 산식은 변경하지 마세요**.
 인터뷰 노트와 templates.md는 읽지 마세요 (작성자≠평가자 분리).
 ```
+
+**평가자 시점 결정**: `--reviewer` 인자가 있으면 그 값을, 없으면 `hr`(기본값)을 사용합니다.
+`both`는 두 시점이 모두 PASS여야 통과하므로 루프가 길어집니다 — 최종 검증용으로 안내하세요.
 
 ### 자동 재작성 루프 (최대 3회)
 - 판정이 `RETRY`이고 `retry_feedback.needs_user_input`이 `true`이면: **루프 회차를 소모하지 않고**

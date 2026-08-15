@@ -66,7 +66,7 @@ claude --plugin-dir C:\path\to\claude-interview-agents
 | `/create-questionnaire <이력서>` | 맞춤 면접 질문지 생성 — 총 20~25문항 (질문 4카테고리, [스크리닝]/[본선] 난이도 라벨, 브라우저/네트워크/보안 축, 역질문 3개 포함) | `resumes/[이름]_questionnaire.md` |
 | `/evaluate <질문지>` | 3-에이전트 병렬 평가 + 최종 판정 | `resumes/[이름]_evaluation.md` |
 | `/mock-interview <이력서> [--type executive\|culture]` | 인터랙티브 임원/컬처핏 모의면접 + 평가 | `resumes/[이름]_mock_[type]_[YYYY-MM-DD].md` (세션) + `..._evaluation.md` (평가) |
-| `/portfolio <이력서> [JD]` | 4-Phase 포트폴리오 하니스 | `portfolio/<항목>/final.md` |
+| `/portfolio <이력서> [JD] [--reviewer=hr\|tech\|both]` | 4-Phase 포트폴리오 하니스 — Phase 2는 고정 질문 은행(Q1~Q22)에서 선별, Phase 4는 평가자 시점 렌즈 적용(기본 `hr`) | `portfolio/<항목>/final.md` |
 | `/assignment-review <과제레포> [요구사항] [JD]` | 과제 전형(take-home) 제출물을 채용사 리뷰어 시점으로 평가 — 요구사항/실행성 Binary + 코드품질·README·커밋·3년차 기대치 채점 + 예상 리뷰어 질문 | `assignments/<과제slug>/review-[YYYY-MM-DD].md` |
 | `/interview-retro <이력서> [--company 회사]` | 실전 면접에서 받은 질문을 회고해 질문지·질문은행과 대조(갭 분류 A/B/C), 준비 자산에 환류 | `resumes/[이름]_retro_[회사]_[YYYY-MM-DD].md` |
 | `/offer <이력서>` | 오퍼 조건 구조화 비교 + 검증된 성과를 협상 카드로 변환 + 인사담당자 협상 리허설 (라이트 버전, 정식 채점 없음) | `resumes/[이름]_offer_[YYYY-MM-DD].md` |
